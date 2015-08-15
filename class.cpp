@@ -292,6 +292,10 @@ void teacherList::printTitle(int rank) {
 		cout<<setw(_peopleNameLength+1)<<current->name;
 	}
 }
+void teacherList::getName(char *buff) {
+	strcpy(buff,current->name);
+}
+
 void teacherList::showCurrent() {
 	if(current) cout<<*current;
 }
@@ -649,7 +653,7 @@ bool courseList::isExists(course *aim) {//不改变current指针
 	p=NULL;
 	return 0;
 }
-int courseList::find(course *aim,int rank) {//返回找到的个数,如果找到一个,current不为空;rank不为零则输出第几条
+int courseList::find(course *aim, bool print, int rank) {//返回找到的个数,如果找到一个,current不为空;rank不为零则输出第几条
 	course *p;
 	int count=0;//count记录找到的个数
 	p=head;
@@ -658,13 +662,14 @@ int courseList::find(course *aim,int rank) {//返回找到的个数,如果找到一个,curren
 		if((!strcmp(p->name,aim->name) || !strcmp(aim->name,"NULL")) &&
 			(!strcmp(p->teacher,aim->teacher) || !strcmp(aim->teacher,"NULL"))) 
 		{
-			if(!count && !rank) cout<<"课程信息:\n    "<<setw(_courseNameLength+1)
+			if(!count && !rank && print) cout<<"---------------\n课程信息:\n"
+				<<"---------------\n    "<<setw(_courseNameLength+1)
 				<<"课程名"<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
 			count++;
 			current=p;
-			if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
+			if(!rank && print) cout<<setw(2)<<count<<". "<<*p<<endl;
 			if(count==rank) {
-				cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
+				if(print) cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
 				return 1;
 			}
 		}
@@ -681,12 +686,13 @@ int courseList::find(course *aim,int rank) {//返回找到的个数,如果找到一个,curren
 			if((strstr(p->name,aim->name) || !strcmp(aim->name,"NULL")) &&
 			(strstr(p->teacher,aim->teacher) || !strcmp(aim->teacher,"NULL")))
 			{
-				if(!count && !rank) cout<<"可能的课程信息:\n    "<<setw(_courseNameLength+1)
+				if(!count && !rank && print) cout<<"---------------\n可能的课程信息:\n"
+					<<"---------------\n    "<<setw(_courseNameLength+1)
 				<<"课程名"<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
 				count++;
 				current=p;
-				if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
-				if(count==rank) {
+				if(!rank && print) cout<<setw(2)<<count<<". "<<*p<<endl;
+				if(count==rank && print) {
 					cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
 					return 1;
 				}
@@ -699,7 +705,8 @@ int courseList::find(course *aim,int rank) {//返回找到的个数,如果找到一个,curren
 			return count;
 		}
 		else {
-			cout<<"未找到符合条件的条目"<<endl;
+			if(print)
+				cout<<"未找到符合条件的条目"<<endl;
 			current=NULL;
 			return 0;
 		}
@@ -1156,7 +1163,7 @@ void gradeList::showRow(int r) {
 		else {
 			cout<<"*"<<endl;
 		}
-		p=p->down;
+		p=p->right;
 	}
 	cout<<endl;
 }

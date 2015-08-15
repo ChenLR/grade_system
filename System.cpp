@@ -24,7 +24,8 @@ public:
 	bool Login();
 private:
 	bool Menu();
-	int ShowCourse();
+	int ShowCourses();
+	int CourseDetail();
 	int EditTeacher();
 };
 class adminOperation: public A, virtual public T, virtual public G{
@@ -253,7 +254,7 @@ bool teacherOperation::Menu() {
 		switch(state) {
 		case 0: return _exit;
 		case 1: {
-			state=ShowCourse();
+			state=ShowCourses();
 			break;
 				}
 		case 2: {
@@ -274,7 +275,30 @@ bool teacherOperation::Menu() {
 	}
 }
 
-int teacherOperation::ShowCourse() {
+int teacherOperation::ShowCourses() {
+	system("cls");
+	int state,num;
+	char name[_peopleNameLength];
+	cout.setf(ios_base::left);
+	T::getName(name);
+	num = C::find(&course("NULL",name));
+	if(num == 1 && C::isCurrent());
+	else if(num > 1) {
+		C::find(&course("NULL",name), 1);
+		cout<<setw(2)<<num + 1<<". 返回上一级\n"
+			<<"---------------\n请输入序号:";
+		if(!inputInt(state,num + 1)) return 1;
+		if(!state || state == num + 1) return -1;
+		else {
+			C::find(&course("NULL",name),0,state);
+			if(C::isCurrent());
+			else return -1;
+		}
+	}
+	system("cls");
+
+	G::refreshRank();
+	G::showRow(C::getRank());
 	system("pause");
 	return -1;
 }

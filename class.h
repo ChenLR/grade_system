@@ -160,6 +160,7 @@ public:
 	bool deleteTeacher();
 	void showAll();
 	void printTitle(int rank=0);//若rank为空,打印current对应的姓名
+	void getName(char *buff);
 	void showCurrent();
 	void clearCurrent();
 	bool isCurrent();
@@ -201,7 +202,7 @@ public:
 	courseList(courseList & L);
 	~courseList();
 	bool isExists(course *aim);
-	int find(course *aim,int rank=0);//返回找到的个数,如果找到一个,current不为空
+	int find(course *aim, bool print=0, int rank=0);//返回找到的个数,如果找到一个,current不为空
 	int getRank();//返回current所指节点的序号,头结点记为1,若current为空返回0;
 	int getLength();
 	int getCredit(int rank=0);
