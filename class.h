@@ -206,13 +206,13 @@ public:
 	int getLength();
 	int getCredit(int rank=0);
 	void setStudentNum(int n);
-	void printStudentNum();
+	int getStudentNum();
 	void Import();
 	void Export();
 	bool addCourse(course *add);
 	bool deleteCourse();
 	void showAll();
-	void printTitle(int rank=0);
+	void printTitle(int rank=0,int flag=1);
 	void clearCurrent();
 	bool isCurrent();
 private:
@@ -228,7 +228,8 @@ public:
 	void Import();
 	void Export();
 	bool findNode(int m, int n);//要改current
-	bool showNode(int m, int n);
+	void setNode(int grade, int m = 0, int n = 0);//设置第(m,n)的成绩,无参数即设置current所指成绩
+	bool showNode(int m = 0, int n = 0);
 	bool isExist(int m, int n);//不改current
 	bool addNode(OLNode *Node);
 	bool deleteNode();
@@ -239,7 +240,11 @@ public:
 	void showAll();
 	void showAllt();
 	void showRow(int r);
+	void showRowList(int r);
+	void moveInRow(int rank);//将current移动到行链表的第rank个
 	void showCol(int c);
+	void showColList(int c);
+	void moveInCol(int rank);//将current移动到列链表的第rank个
 	void refreshRank();
 	void refreshStudent();
 	int maxInRow();

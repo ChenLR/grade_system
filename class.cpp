@@ -738,8 +738,9 @@ int courseList::getCredit(int rank) {
 void courseList::setStudentNum(int n) {
 	if(current) current->studentNum = n;
 }
-void courseList::printStudentNum() {
-	if(current) cout<<current->studentNum;
+int courseList::getStudentNum() {
+	if(current) return current->studentNum;
+	else return 0;
 }
 void courseList::Import() {
 	ifstream inf("Data\\courseInfo_in.txt");
@@ -816,17 +817,19 @@ void courseList::showAll() {
 	}
 	p=NULL;
 }
-void courseList::printTitle(int rank) {
+void courseList::printTitle(int rank,int flag) {
 	if(rank) {
 		course *p;
 		p=head;
 		for(int k=1;k<rank;p=p->next,k++);
 		cout.setf(ios_base::left);
-		cout<<setw(_courseNameLength+1)<<p->name<<setw(_peopleNameLength+1)<<p->teacher<<setw(5)<<p->credit;
+		cout<<setw(_courseNameLength+1)<<p->name<<setw(_peopleNameLength+1)<<p->teacher;
+		if(flag) cout<<setw(5)<<p->credit;
 	}
 	else if(current) {
 		cout.setf(ios_base::left);
-		cout<<setw(_courseNameLength+1)<<current->name<<setw(_peopleNameLength+1)<<current->teacher<<setw(5)<<current->credit;
+		cout<<setw(_courseNameLength+1)<<current->name<<setw(_peopleNameLength+1)<<current->teacher;
+		if(flag) cout<<setw(5)<<current->credit;
 	}
 }
 void courseList::clearCurrent() {
@@ -925,17 +928,33 @@ bool gradeList::findNode(int m, int n) {
 	}
 	return 0;
 }//Òª¸Äcurrent
+void gradeList::setNode(int grade ,int m, int n) {
+	if(m && n) findNode(m,n);
+	if(current) current->grade = grade;
+}
 bool gradeList::showNode(int m, int n) {
-	if(m>rowMax || m<=0 || n>colMax || n<=0) 
+	if(m>rowMax || m<0 || n>colMax || n<0) 
 		return 0;
-	OLNode *p;
-	p=rowHead[m-1];
-	while(p) {
-		if(p->col==n) {
-			cout<<p->grade;
-			return 1;
+	if(m == 0 || n == 0) {
+		if(current) {
+			C::printTitle(current->row,0);
+			S::printTitle(current->col);
+			cout<<current->grade;
 		}
-		p=p->right;
+		return 1;
+	}
+	else {
+		OLNode *p;
+		p=rowHead[m-1];
+		while(p) {
+			if(p->col==n) {
+				C::printTitle(p->row,0);
+			    S::printTitle(p->col);
+				cout<<p->grade;
+				return 1;
+			}
+			p=p->right;
+		}
 	}
 	return 0;
 }
@@ -1172,6 +1191,36 @@ void gradeList::showRow(int r) {
 	}
 	setStudentNum(count);
 }
+void gradeList::showRowList(int r) {
+	int count = 0, total,half;
+	if(r<=0 || r>rowMax) return;
+	OLNode *p,*q;
+	p=q=rowHead[r-1];
+	total = getStudentNum();
+	half = total/2+total%2;
+	for(int k = 0;k < half;k++) {
+		q = q->right;
+	}
+	for(int k = 0;k < half;k++) {
+		if(p) {
+			cout.setf(ios_base::right);
+			cout<<setw(2)<<k + 1<<". "<<resetiosflags(ios::right);
+			studentList::printTitle(p->col);
+			p=p->right;
+		}
+		if(q) {
+			cout.setf(ios_base::right);
+			cout<<setw(2)<<k + half + 1<<". "<<resetiosflags(ios::right);
+			studentList::printTitle(q->col);
+			q=q->right;
+		}
+		cout<<endl;
+	}
+}
+void gradeList::moveInRow(int rank) {
+	current = rowHead[courseList::getRank()-1];
+	for(int k = 1;k<rank;k++) current = current->right;
+}
 void gradeList::showCol(int c) {
 	if(c<=0 || c>colMax) return;
 	OLNode *p;
@@ -1188,6 +1237,37 @@ void gradeList::showCol(int c) {
 		}
 		p=p->down;
 	}
+}
+void gradeList::showColList(int c) {
+	int count = 0, total=0,half;
+	if(c<=0 || c>rowMax) return;
+	OLNode *p,*q;
+	p=q=colHead[c-1];
+	for(;p;p = p->down) total++;
+	p=q;
+	half = total/2+total%2;
+	for(int k = 0;k < half;k++) {
+		q = q->down;
+	}
+	for(int k = 0;k < half;k++) {
+		if(p) {
+			cout.setf(ios_base::right);
+			cout<<setw(2)<<k + 1<<". "<<resetiosflags(ios::right);
+			courseList::printTitle(p->row,0);
+			p=p->down;
+		}
+		if(q) {
+			cout.setf(ios_base::right);
+			cout<<setw(2)<<k + half + 1<<". "<<resetiosflags(ios::right);
+			courseList::printTitle(q->row,0);
+			q=q->down;
+		}
+		cout<<endl;
+	}
+}
+void gradeList::moveInCol(int rank) {
+	current = colHead[studentList::getRank()-1];
+	for(int k = 1;k<rank;k++) current = current->down;
 }
 void gradeList::refreshRank() {
 	OLNode *p,*q;
@@ -1286,7 +1366,7 @@ double gradeList::meanInRow() {
 		}
 		p = p->right;
 	}
-	if(count) return sum/double(count);
+	if(count) return double(sum)/double(count);
 	else return -1;
 }
 void gradeList::quickSort(OLNode **P,int length) {

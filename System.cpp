@@ -308,18 +308,17 @@ int teacherOperation::ShowCourses() {
 int teacherOperation::CourseMenu() {
 	int state;
 	system("cls");
+	cout.setf(ios_base::left);
 	cout<<"---------------\n"
 		<<setw(_courseNameLength+1)<<"课程"
-		<<setw(_peopleNameLength+1)<<"教师"
-		<<"学分\n";
-	C::printTitle();
+		<<"教师\n";
+	C::printTitle(C::getRank(),0);
 	cout<<"\n---------------\n"
 		<<setw(_peopleNameLength+1)<<"学生"
 		<<setw(5)<<"成绩"<<"排名\n";
 	G::refreshRank();
 	G::showRow(C::getRank());
-	cout<<"总人数:";
-	C::printStudentNum();
+	cout<<"总人数:"<<C::getStudentNum();
 	cout<<"\n---------------\n"
 		<<"1. 录入或修改成绩\n"
 		<<"2. 查看统计信息\n"
@@ -347,15 +346,49 @@ int teacherOperation::EditGrade() {
 	int state;
 	system("cls");
 	cout<<"---------------\n"
+		<<"修改或录入成绩\n"
+		<<"---------------\n"
 		<<setw(_courseNameLength+1)<<"课程"
-		<<setw(_peopleNameLength+1)<<"教师"
-		<<"学分\n";
-	C::printTitle();
+		<<"教师\n";
+	C::printTitle(C::getRank(),0);
 	cout<<"\n---------------\n";
-
-
-	system("pause");
-	return 0;
+	showRowList(C::getRank());
+	cout<<"---------------\n请选择学生序号:";
+	if(!inputInt(state,C::getStudentNum())) return 1;
+	if(state) {
+		int grade;
+		system("cls");
+		moveInRow(state);
+		cout<<"---------------\n"
+			<<setw(_courseNameLength+1)<<"课程"
+		    <<setw(_peopleNameLength+1)<<"教师"
+			<<setw(_peopleNameLength+1)<<"学生"
+			<<"成绩\n";
+		showNode();
+		cout<<"\n---------------\n"
+			<<"请输入新的成绩:";
+		if(inputGrade(grade)) {
+			cout<<"确认修改成绩?(Y/n):";
+			if(inputBool()) {
+				G::setNode(grade);
+				cout<<"修改成功!\n";
+			}
+			G::clearCurrent();
+			cout<<"---------------\n"
+				<<"1. 继续修改成绩\n"
+				<<"2. 返回上一级\n"
+				<<"---------------\n"
+				<<"请输入功能序号:";
+			if(!inputInt(state,2)) return 0;
+			switch(state) {
+			case 1: return 1;
+			default: return 0;
+			}
+		}
+		G::clearCurrent();
+		return 0;
+	}
+	else return 0;
 }
 int teacherOperation::CourseDetail() {
 	int state;
@@ -688,5 +721,5 @@ void quickSort(int **P,int length) {
 }
 
 void System::TestMain() {
-	refreshRank();
+	showColList(1);
 }

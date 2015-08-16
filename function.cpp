@@ -52,7 +52,6 @@ bool inputInt(int &state,int max) {
 			return 0;
 		}
 		cout<<"输入数据非法!\n请重新输入序号:";
-
 	}
 	fflush(stdin);
 	s[strlen(s)-1]='\0';//清掉读入的回车
@@ -94,5 +93,26 @@ bool inputString(char *s,int max) {
 	fflush(stdin);
 	s[strlen(s)-1]='\0';//清掉读入的回车
 	if(!strcmp(s,"quit")) return 0;
+	return 1;
+}
+bool inputGrade(int &grade) {
+	int k=0;
+	char s[12];
+	while(k++,fgets(s,12,stdin), s[strlen(s)-1]!='\n' || strcmp(s,"quit\n") && (atoi(s)>100 || atoi(s) < -1)) {
+		fflush(stdin);	
+		if(k>2) {
+			cout<<"错误次数过多!\n";
+			_sleep(_delay);//延时1秒
+			//防止在延时时误操作
+			return 0;
+		}
+		cout<<"输入数据非法!\n请重新输入成绩:";
+	}
+	fflush(stdin);
+	s[strlen(s)-1]='\0';//清掉读入的回车
+	if(!strcmp(s,"quit")) {
+		return 0;
+	}
+	grade=atoi(s);
 	return 1;
 }
