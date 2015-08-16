@@ -6,7 +6,7 @@
 #define _Length 1000000
 using namespace std;
 
-class studentOperation: virtual public G{
+class studentOperation: virtual public gradeList{
 public:
 	studentOperation() {};
 	~studentOperation() {};
@@ -17,18 +17,20 @@ private:
 	int ShowRank();
 	int EditStudent();
 };
-class teacherOperation: virtual public T, virtual public G{
+class teacherOperation: virtual public teacherList, virtual public gradeList{
 public:
 	teacherOperation() {};
 	~teacherOperation() {};
 	bool Login();
 private:
 	bool Menu();
-	int ShowCourses();
-	int CourseDetail();
+	int ShowCourses();//一名教师可能任教多门课程,课程选择菜单
+	int CourseMenu();//某一门课程的菜单
+	int EditGrade();
+	int CourseDetail();//课程统计信息
 	int EditTeacher();
 };
-class adminOperation: public A, virtual public T, virtual public G{
+class adminOperation: public adminList, virtual public teacherList, virtual public gradeList{
 public:
 	adminOperation() {};
 	~adminOperation() {};
@@ -172,12 +174,13 @@ int studentOperation::EditStudent() {
 		<<"请输入功能序号:";
 	if(!inputInt(state,3)) return 1;
 	switch(state) {
-	case 0: return _exit;
+	case 0: return -1;
 	case 1: {
 		char name[_peopleNameLength];
+
 		cout<<"---------------\n"
 			<<"请输入新的姓名:";
-		if(!inputString(name,_peopleNameLength)) return _exit;
+		if(!inputString(name,_peopleNameLength)) return -1;
 		if(S::isExists(&student(name),0)) {
 			cout<<"用户名已存在!"<<endl;
 			_sleep(_delay);
@@ -191,7 +194,7 @@ int studentOperation::EditStudent() {
 		char password[_passwordLength];
 		cout<<"---------------\n"
 			<<"请输入新的密码:";
-		if(!inputString(password,_passwordLength)) return _exit;
+		if(!inputString(password,_passwordLength)) return -1;
 		setStudent("NULL",password);
 		cout<<"修改已成功!\n";
 		break;
@@ -274,35 +277,102 @@ bool teacherOperation::Menu() {
 		}
 	}
 }
-
 int teacherOperation::ShowCourses() {
 	system("cls");
 	int state,num;
 	char name[_peopleNameLength];
 	cout.setf(ios_base::left);
+
 	T::getName(name);
 	num = C::find(&course("NULL",name));
-	if(num == 1 && C::isCurrent());
+	if(num == 1) {
+		while(CourseMenu());
+		return -1;
+	}
 	else if(num > 1) {
 		C::find(&course("NULL",name), 1);
 		cout<<setw(2)<<num + 1<<". 返回上一级\n"
 			<<"---------------\n请输入序号:";
 		if(!inputInt(state,num + 1)) return 1;
-		if(!state || state == num + 1) return -1;
+		if(!state || state == num + 1) {
+			C::clearCurrent();
+			return -1;
+		}
 		else {
 			C::find(&course("NULL",name),0,state);
-			if(C::isCurrent());
-			else return -1;
+			while(CourseMenu());
+			return 1;
 		}
 	}
+}
+int teacherOperation::CourseMenu() {
+	int state;
 	system("cls");
-
+	cout<<"---------------\n"
+		<<setw(_courseNameLength+1)<<"课程"
+		<<setw(_peopleNameLength+1)<<"教师"
+		<<"学分\n";
+	C::printTitle();
+	cout<<"\n---------------\n"
+		<<setw(_peopleNameLength+1)<<"学生"
+		<<setw(5)<<"成绩"<<"排名\n";
 	G::refreshRank();
 	G::showRow(C::getRank());
-	system("pause");
-	return -1;
+	cout<<"总人数:";
+	C::printStudentNum();
+	cout<<"\n---------------\n"
+		<<"1. 录入或修改成绩\n"
+		<<"2. 查看统计信息\n"
+		<<"3. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入功能序号:";
+	if(!inputInt(state,3)) return 1;
+	switch(state) {
+	case 1: {
+		while(EditGrade());
+		break;
+			}
+	case 2: {
+		while(CourseDetail());
+		break;
+			}
+	default: {
+		C::clearCurrent();
+		return _exit;
+			}
+	}
+	return 1;
 }
+int teacherOperation::EditGrade() {
+	int state;
+	system("cls");
+	cout<<"---------------\n"
+		<<setw(_courseNameLength+1)<<"课程"
+		<<setw(_peopleNameLength+1)<<"教师"
+		<<"学分\n";
+	C::printTitle();
+	cout<<"\n---------------\n";
 
+
+	system("pause");
+	return 0;
+}
+int teacherOperation::CourseDetail() {
+	int state;
+	system("cls");
+	cout<<"---------------\n"
+		<<setw(_courseNameLength+1)<<"课程"
+		<<setw(_peopleNameLength+1)<<"教师"
+		<<"学分\n";
+	C::printTitle();
+	cout<<"\n---------------\n"
+		<<"最高分:"<<maxInRow()
+		<<"\n最低分:"<<minInRow()
+		<<"\n平均分:"<<setprecision(3)<<meanInRow()
+		<<"\n---------------\n";
+	system("pause");
+	return 0;
+}
 int teacherOperation::EditTeacher() {
 	system("cls");
 	int state;
@@ -618,14 +688,5 @@ void quickSort(int **P,int length) {
 }
 
 void System::TestMain() {
-	G::showAllt();
-	G::refreshStudent();
-	S::showAllt();
-	for(int k=1;k<32;k++) {
-		showSTU(k);
-		cout<<rankInAll(k)<<endl;
-	}
-	cout.setf(ios_base::left);
-	cout<<setw(7)<<setprecision(2)<<100<<"*\n";
-	system("pause");
+	refreshRank();
 }

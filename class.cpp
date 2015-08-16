@@ -588,9 +588,6 @@ void course::set(char *name, char *teacher, int credit) {//0Îª²»¿ÉÄÜµÄÖµ,ÓÃÓÚÅÐ¶
 	if(teacher!="NULL") strcpy(this->teacher,teacher);
 	if(credit>0) this->credit=credit;
 }
-void course::setStudentNum(int n) {
-	studentNum=n;
-}
 void course::clear() {
 	strcpy(name,"NULL");
 	strcpy(teacher,"NULL");
@@ -737,6 +734,12 @@ int courseList::getCredit(int rank) {
 	}
 	else
 		return current->credit;
+}
+void courseList::setStudentNum(int n) {
+	if(current) current->studentNum = n;
+}
+void courseList::printStudentNum() {
+	if(current) cout<<current->studentNum;
 }
 void courseList::Import() {
 	ifstream inf("Data\\courseInfo_in.txt");
@@ -1150,6 +1153,7 @@ void gradeList::showAllt() {
 	cout<<endl;
 }
 void gradeList::showRow(int r) {
+	int count = 0;
 	if(r<=0 || r>rowMax) return;
 	OLNode *p;
 	p=rowHead[r-1];
@@ -1163,15 +1167,15 @@ void gradeList::showRow(int r) {
 		else {
 			cout<<"*"<<endl;
 		}
+		count++;
 		p=p->right;
 	}
-	cout<<endl;
+	setStudentNum(count);
 }
 void gradeList::showCol(int c) {
 	if(c<=0 || c>colMax) return;
 	OLNode *p;
 	p=colHead[c-1];
-	refreshRank();//Éú³Éµ¥¿ÆÅÅÃû
 	while(p) {
 		courseList::printTitle(p->row);
 		cout.setf(ios_base::left);
@@ -1241,6 +1245,50 @@ void gradeList::refreshStudent() {
 		else setSTU(creditSum,-1,rank+1);
 	}
 }
+
+int gradeList::maxInRow() {
+	OLNode *p;
+	int max;
+	p = rowHead[C::getRank()-1];
+	if(!p) max = -1;
+	else {
+		max = p->grade;
+		while(p) {
+			if(p->grade > max) max = p->grade;
+			p = p->right;
+		}
+	}
+	return max;
+}
+int gradeList::minInRow() {
+	OLNode *p;
+	int min = 101;
+	p = rowHead[C::getRank()-1];
+	if(!p) min = -1;
+	else {
+		if (p->grade != -1) min = p->grade;
+		while(p) {
+			if(p->grade < min && p->grade != -1) min = p->grade;
+			p = p->right;
+		}
+	}
+	if(min == 101) min = -1;
+	return min;
+}
+double gradeList::meanInRow() {
+	int sum = 0,count = 0;
+	OLNode *p;
+	p = rowHead[C::getRank()-1];
+	while(p) {
+		if(p->grade != -1) {
+			count++;
+			sum += p->grade;
+		}
+		p = p->right;
+	}
+	if(count) return sum/double(count);
+	else return -1;
+}
 void gradeList::quickSort(OLNode **P,int length) {
 	if(length<=1) return;
 	int refer;//²Î¿¼Öµ
@@ -1249,7 +1297,7 @@ void gradeList::quickSort(OLNode **P,int length) {
 	refer=P[temp]->grade;
 	while(1) {
 		while(P[head]->grade>=refer && head<length-1) head++;//ÕÒ¸üÐ¡Öµ
-		while(P[tail]->grade<=refer && tail>1) tail--;//ÕÒ¸ü´óÖµ
+		while(P[tail]->grade<=refer && tail>0) tail--;//ÕÒ¸ü´óÖµ
 		if(head<tail) {
 			buff=P[head];
 			P[head]=P[tail];

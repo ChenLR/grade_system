@@ -86,7 +86,6 @@ public:
 	course(course &C);
 	~course() {};
 	void set(char *name="NULL", char *teacher="NULL", int credit=0);//0为不可能的值,用于判断是否赋值
-	void setStudentNum(int n);
 	void print();//只打印非初值的量
 	void clear();
 	bool isEmpty();
@@ -206,6 +205,8 @@ public:
 	int getRank();//返回current所指节点的序号,头结点记为1,若current为空返回0;
 	int getLength();
 	int getCredit(int rank=0);
+	void setStudentNum(int n);
+	void printStudentNum();
 	void Import();
 	void Export();
 	bool addCourse(course *add);
@@ -241,6 +242,9 @@ public:
 	void showCol(int c);
 	void refreshRank();
 	void refreshStudent();
+	int maxInRow();
+	int minInRow();
+	double meanInRow();
 	void quickSort(OLNode **P, int length);//按成绩降序排列
 	void clearCurrent();
 	bool isCurrent();
