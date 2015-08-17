@@ -129,7 +129,6 @@ bool adminList::deleteAdmin() {
 }
 void adminList::showAll() {
 	admin *p;
-	cout<<"---------------\n";
 	cout.setf(ios_base::left);
 	cout<<setw(_peopleNameLength+1)<<"用户名"<<setw(_passwordLength+1)<<"密码"<<endl;
 	p=head;
@@ -202,6 +201,55 @@ bool teacherList::isCorrect(teacher *aim) {
 		return !strcmp(aim->password,current->password);
 	return 0;
 }
+int teacherList::find(teacher *aim,int rank) {//返回找到的个数,如果找到一个,current不为空;rank不为零则输出第几条
+	teacher *p;
+	int count=0;//count记录找到的个数
+	p=head;
+	while(p) {
+		if(!strcmp(p->name,aim->name)) {
+			if(!count && !rank) cout<<"教师姓名:"<<endl;
+			count++;
+			current=p;
+			if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
+			if(count==rank) {
+				cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
+				return 1;
+			}
+		}
+		p=p->next;
+	}
+	if(count==1) return count;
+	else if(count>1) {
+		current=NULL;
+		return count;
+	}
+	else {//若精确搜索无法找到则模糊搜索
+		p=head;
+		while(p) {
+			if(strstr(p->name,aim->name)) {
+				if(!count && !rank) cout<<"可能的教师姓名:"<<endl;
+				count++;
+				current=p;
+				if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
+				if(count==rank) {
+					cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
+					return 1;
+				}
+			}
+			p=p->next;
+		}
+		if(count==1) return count;
+		else if(count>1) {
+			current=NULL;
+			return count;
+		}
+		else {
+			cout<<"未找到符合条件的条目"<<endl;
+			current=NULL;
+			return 0;
+		}
+	}
+}
 void teacherList::Import() {
 	ifstream inf("Data\\teacherInfo_in.txt");
 	char name[_peopleNameLength],password[_passwordLength];
@@ -269,7 +317,6 @@ bool teacherList::deleteTeacher() {
 }
 void teacherList::showAll() {
 	teacher *p;
-	cout<<"---------------\n";
 	cout.setf(ios_base::left);
 	cout<<setw(_peopleNameLength+1)<<"用户名"<<setw(_passwordLength+1)<<"密码"<<endl;
 	p=head;
@@ -382,7 +429,7 @@ int studentList::find(student *aim,int rank) {//返回找到的个数,如果找到一个,curr
 	p=head;
 	while(p) {
 		if(!strcmp(p->name,aim->name)) {
-			if(!count && !rank) cout<<"读者姓名:"<<endl;
+			if(!count && !rank) cout<<"学生姓名:"<<endl;
 			count++;
 			current=p;
 			if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
@@ -402,7 +449,7 @@ int studentList::find(student *aim,int rank) {//返回找到的个数,如果找到一个,curr
 		p=head;
 		while(p) {
 			if(strstr(p->name,aim->name)) {
-				if(!count && !rank) cout<<"可能的读者姓名:"<<endl;
+				if(!count && !rank) cout<<"可能的学生姓名:"<<endl;
 				count++;
 				current=p;
 				if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
@@ -480,7 +527,6 @@ bool studentList::deleteStudent() {
 }
 void studentList::showAll() {
 	student *p;
-	cout<<"---------------\n";
 	cout.setf(ios_base::left);
 	cout<<setw(_peopleNameLength+1)<<"用户名"<<setw(_passwordLength+1)<<"密码"<<endl;
 	p=head;

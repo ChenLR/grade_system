@@ -150,8 +150,9 @@ public:
 	teacherList();
 	teacherList(teacherList & L);
 	~teacherList();
-	bool isExists(teacher *aim, int flag=1);
+	bool isExists(teacher *aim, int flag=1);//若flag,修改current
 	bool isCorrect(teacher *aim); //返回姓名密码是否正确
+	int find(teacher *aim,int rank=0);//返回找到的个数,如果找到一个,current不为空
 	void Import();
 	void Export();
 	void setTeacher(char *name="NULL", char *password="NULL");
@@ -259,6 +260,77 @@ private:
 	OLNode *current;
 	OLNode **rowHead;
 	OLNode **colHead; 
+};
+
+class studentOperation: virtual public gradeList{
+public:
+	studentOperation() {};
+	~studentOperation() {};
+	bool Login();
+private:
+	bool Menu();
+	int ShowGrade();
+	int ShowRank();
+	int EditStudent();
+};
+class teacherOperation: virtual public teacherList, virtual public gradeList{
+public:
+	teacherOperation() {};
+	~teacherOperation() {};
+	bool Login();
+private:
+	bool Menu();
+	int ShowCourses();//一名教师可能任教多门课程,课程选择菜单
+	int CourseMenu();//某一门课程的菜单
+	int EditGrade();
+	int CourseDetail();//课程统计信息
+	int EditTeacher();
+};
+class adminOperation: public adminList, virtual public teacherList, virtual public gradeList{
+public:
+	adminOperation() {};
+	~adminOperation() {};
+	bool Login();
+private:
+	bool Menu();
+	int EditTeacher();
+	int FindTeacher(bool flag = 1);
+	int TeacherInfo();
+	int AddTeacher();
+	int SetTeacher();
+	int DeleteTeacher();
+	int EditStudent();
+	int FindStudent(bool flag = 1);
+	int StudentInfo();
+	int AddStudent();
+	int SetStudent();
+	int DeleteStudent();
+	int EditCourse();
+	int FindCourse(bool flag = 1);
+	int CourseInfo();
+	int AddCourse();
+	int SetCourse();
+	int DeleteCourse();
+	int EditGrade();
+	int FindGrade(bool flag = 1);
+	int AddGrade();
+	int SetGrade();
+	int DeleteGrade();
+	int EditAdmin();
+};
+
+class System: public adminOperation, public teacherOperation, public studentOperation{
+public:
+	System() {};
+	~System() {};
+	void Init();//系统初始化,唯一的外部接口
+private:
+	bool MainMenu();//主菜单入口
+	void TestMain();//测试接口
+	void Lists_import();//将所有文件信息导入各链表
+	void Lists_export();//将所有链表信息输出到各文件
+	void About();
+
 };
 
 #endif CLASS_H_
