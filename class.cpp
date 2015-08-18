@@ -201,18 +201,27 @@ bool teacherList::isCorrect(teacher *aim) {
 		return !strcmp(aim->password,current->password);
 	return 0;
 }
-int teacherList::find(teacher *aim,int rank) {//返回找到的个数,如果找到一个,current不为空;rank不为零则输出第几条
+int teacherList::find(teacher *aim,bool print,int rank) {//返回找到的个数,如果找到一个,current不为空;rank不为零则输出第几条
 	teacher *p;
 	int count=0;//count记录找到的个数
 	p=head;
 	while(p) {
 		if(!strcmp(p->name,aim->name)) {
-			if(!count && !rank) cout<<"教师姓名:"<<endl;
+			if(!count && !rank && print)
+				cout<<"教师信息:\n"
+				<<"---------------\n    "
+				<<setw(_peopleNameLength+1)
+				<<"姓名"<<"密码\n";
 			count++;
 			current=p;
-			if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
+			if(!rank) cout<<setw(2)<<setiosflags(ios_base::right)<<count
+				<<resetiosflags(ios_base::right)<<". "<<*p<<endl;
 			if(count==rank) {
-				cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
+				if(print)
+					cout<<"---------------\n"
+					<<setw(_peopleNameLength+1)<<"姓名"
+					<<"密码\n"
+					<<*p<<endl;
 				return 1;
 			}
 		}
@@ -227,12 +236,21 @@ int teacherList::find(teacher *aim,int rank) {//返回找到的个数,如果找到一个,curr
 		p=head;
 		while(p) {
 			if(strstr(p->name,aim->name)) {
-				if(!count && !rank) cout<<"可能的教师姓名:"<<endl;
+				if(!count && !rank && print)
+				cout<<"可能的教师信息:\n"
+				<<"---------------\n    "
+				<<setw(_peopleNameLength+1)
+				<<"姓名"<<"密码\n";
 				count++;
 				current=p;
-				if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
+				if(!rank) cout<<setw(2)<<setiosflags(ios_base::right)<<count
+					<<resetiosflags(ios_base::right)<<". "<<*p<<endl;
 				if(count==rank) {
-					cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
+					if(print)
+					cout<<"---------------\n"
+					<<setw(_peopleNameLength+1)<<"姓名"
+					<<"密码\n"
+					<<*p<<endl;
 					return 1;
 				}
 			}
@@ -360,8 +378,10 @@ student::student(char* name,char* password) {
 	next=NULL;
 	GPA=-1;//-1代表暂无成绩
 	totalCredit=0;
+	courseNum=0;
 }
-student::student(student & student):people(student),next(student.next),GPA(student.GPA),totalCredit(student.totalCredit) {};
+student::student(student & student):people(student),next(student.next),GPA(student.GPA),
+	totalCredit(student.totalCredit),courseNum(student.courseNum) {};
 
 studentList::studentList() {
 	head=tail=current=NULL;
@@ -423,18 +443,27 @@ bool studentList::isCorrect(student *aim) {//用户名和密码是否正确
 		return !strcmp(aim->password,current->password);
 	return 0;
 }
-int studentList::find(student *aim,int rank) {//返回找到的个数,如果找到一个,current不为空;rank不为零则输出第几条
+int studentList::find(student *aim,bool print,int rank) {//返回找到的个数,如果找到一个,current不为空;rank不为零则输出第几条
 	student *p;
 	int count=0;//count记录找到的个数
 	p=head;
 	while(p) {
 		if(!strcmp(p->name,aim->name)) {
-			if(!count && !rank) cout<<"学生姓名:"<<endl;
+			if(!count && !rank && print)
+				cout<<"学生信息:\n"
+				<<"---------------\n    "
+				<<setw(_peopleNameLength+1)
+				<<"姓名"<<"密码\n";
 			count++;
 			current=p;
-			if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
+			if(!rank) cout<<setw(2)<<setiosflags(ios_base::right)<<count
+				<<resetiosflags(ios_base::right)<<". "<<*p<<endl;
 			if(count==rank) {
-				cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
+				if(print)
+					cout<<"---------------\n"
+					<<setw(_peopleNameLength+1)<<"姓名"
+					<<"密码\n"
+					<<*p<<endl;
 				return 1;
 			}
 		}
@@ -449,12 +478,21 @@ int studentList::find(student *aim,int rank) {//返回找到的个数,如果找到一个,curr
 		p=head;
 		while(p) {
 			if(strstr(p->name,aim->name)) {
-				if(!count && !rank) cout<<"可能的学生姓名:"<<endl;
+				if(!count && !rank && print)
+				cout<<"可能的学生信息:\n"
+				<<"---------------\n    "
+				<<setw(_peopleNameLength+1)
+				<<"姓名"<<"密码\n";
 				count++;
 				current=p;
-				if(!rank) cout<<setw(2)<<count<<". "<<*p<<endl;
+				if(!rank) cout<<setw(2)<<setiosflags(ios_base::right)<<count
+					<<resetiosflags(ios_base::right)<<". "<<*p<<endl;
 				if(count==rank) {
-					cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
+					if(print)
+					cout<<"---------------\n"
+					<<setw(_peopleNameLength+1)<<"姓名"
+					<<"密码\n"
+					<<*p<<endl;
 					return 1;
 				}
 			}
@@ -487,6 +525,19 @@ int studentList::getRank() {
 }
 int studentList::getLength() {
 	return length;
+}
+void studentList::setCourseNum(int n,int rank) {
+	student *p;
+	if(!rank && current) current->courseNum = n;
+	else {
+		p = head;
+		for(int k = 1;k<rank;k++) p = p->next;
+		p->courseNum = n;
+	}
+}
+int studentList::getCourseNum() {
+	if(current) return current->courseNum;
+	else return 0;
 }
 void studentList::setStudent(char *name, char *password) {
 	if(current) current->set(name,password);
@@ -662,7 +713,7 @@ courseList::~courseList() {
 		p=q;
 	}
 }
-bool courseList::isExists(course *aim) {//不改变current指针
+bool courseList::isExists(course *aim,int flag) {//flag时改current指针
 	course *p;
 	p=head;
 	if(!strcmp(aim->name,"NULL")) {
@@ -689,6 +740,7 @@ bool courseList::isExists(course *aim) {//不改变current指针
 	}
 	while(p) {
 		if(!strcmp(p->name,aim->name) && !strcmp(p->teacher,aim->teacher)) {
+			if(flag) current = p;
 			p=NULL;
 			return 1;
 		}
@@ -715,7 +767,8 @@ int courseList::find(course *aim, bool print, int rank) {//返回找到的个数,如果找
 				<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
 			count++;
 			current=p;
-			if(!rank && print) cout<<setw(2)<<count<<". "<<*p<<endl;
+			if(!rank && print) cout<<setw(2)<<setiosflags(ios_base::right)<<count
+				<<resetiosflags(ios_base::right)<<". "<<*p<<endl;
 			if(count==rank) {
 				if(print)
 					cout<<"---------------\n"
@@ -746,7 +799,8 @@ int courseList::find(course *aim, bool print, int rank) {//返回找到的个数,如果找
 					<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
 				count++;
 				current=p;
-				if(!rank && print) cout<<setw(2)<<count<<". "<<*p<<endl;
+				if(!rank && print) cout<<setw(2)<<setiosflags(ios_base::right)<<count
+					<<resetiosflags(ios_base::right)<<". "<<*p<<endl;
 				if(count==rank) {
 					if(print)
 						cout<<"---------------\n"
@@ -811,8 +865,14 @@ int courseList::getCredit(int rank) {
 	else
 		return current->credit;
 }
-void courseList::setStudentNum(int n) {
-	if(current) current->studentNum = n;
+void courseList::setStudentNum(int n,int rank) {
+	course *p;
+	if(!rank && current) current->studentNum = n;
+	else {
+		p = head;
+		for(int k = 1;k < rank;k++) p = p->next;
+		p->studentNum = n;
+	}
 }
 int courseList::getStudentNum() {
 	if(current) return current->studentNum;
@@ -948,8 +1008,9 @@ gradeList::gradeList(int r,int c):rowMax(r),colMax(c) {
 		exit(1);
 	for(int k=0;k<c;k++)
 		colHead[k]=NULL;
+	current=NULL;
 }
-gradeList::gradeList(gradeList &C):rowMax(C.rowMax),colMax(C.colMax),rowHead(C.rowHead),colHead(C.colHead) {};
+gradeList::gradeList(gradeList &C):rowMax(C.rowMax),colMax(C.colMax),rowHead(C.rowHead),colHead(C.colHead),current(C.current) {};
 gradeList::~gradeList() {
 	OLNode *p;
 	for(int k=0;k<rowMax;k++) {
@@ -1236,7 +1297,8 @@ void gradeList::showAll() {
 		if(!p) for(int k=0;k<colMax;k++) cout<<setw(3)<<"_";
 		while(p) {
 			for(int k=count;k < p->col;k++) cout<<setw(3)<<"_";
-			cout<<setw(3)<<p->grade;
+			if(p->grade >= 0) cout<<setw(3)<<p->grade;
+			else cout<<setw(3)<<"*";
 			count=p->col+1;
 			if(!(p->right))
 				for(int k=p->col;k<colMax;k++) cout<<setw(3)<<"_";
@@ -1256,7 +1318,8 @@ void gradeList::showAllt() {
 		if(!p) for(int k=0;k<rowMax;k++) cout<<setw(3)<<"_";
 		while(p) {
 			for(int k=count;k < p->row;k++) cout<<setw(3)<<"_";
-			cout<<setw(3)<<p->grade;
+			if(p->grade >= 0) cout<<setw(3)<<p->grade;
+			else cout<<setw(3)<<"*";
 			count=p->row+1;
 			if(!(p->down))
 				for(int k=p->row;k<rowMax;k++) cout<<setw(3)<<"_";
@@ -1338,8 +1401,7 @@ void gradeList::showColList(int c) {
 	if(c<=0 || c>rowMax) return;
 	OLNode *p,*q;
 	p=q=colHead[c-1];
-	for(;p;p = p->down) total++;
-	p=q;
+	total = getCourseNum();
 	half = total/2+total%2;
 	for(int k = 0;k < half;k++) {
 		q = q->down;
@@ -1401,6 +1463,28 @@ void gradeList::refreshRank() {
 		}
 	}
 }
+void gradeList::refreshNum() {
+	OLNode *p;
+	int num;
+	for(int k = 0;k < rowMax;k++) {
+		p = rowHead[k];
+		num = 0;
+		while(p) {
+			p = p->right;
+			num++;
+		}
+		setStudentNum(num,k + 1);
+	}
+	for(int k = 0;k < colMax;k++) {
+		p = colHead[k];
+		num = 0;
+		while(p) {
+			p = p->down;
+			num++;
+		}
+		setCourseNum(num,k + 1);
+	}
+}
 void gradeList::refreshStudent() {
 	OLNode *p;
 	int creditSum, gradeSum;
@@ -1420,7 +1504,6 @@ void gradeList::refreshStudent() {
 		else setSTU(creditSum,-1,rank+1);
 	}
 }
-
 int gradeList::maxInRow() {
 	OLNode *p;
 	int max;
@@ -1490,8 +1573,6 @@ void gradeList::quickSort(OLNode **P,int length) {
 		if(length-temp-1>1) quickSort(&(P[temp+1]),length-temp-1);
 	}
 }
-
-
 void gradeList::clearCurrent() {
 	current=NULL;
 }

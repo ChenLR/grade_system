@@ -3,7 +3,6 @@
 #include <iomanip>
 #include "class.h"
 #include "head.h"
-#define _Length 1000000
 using namespace std;
 
 //--------------------------------function--------------------------------
@@ -97,6 +96,7 @@ int studentOperation::ShowGrade() {
 	case 1: return 2;
 	case 2: return 3;
 	case 3: return 4;
+	default: return -1;
 	}
 }
 int studentOperation::ShowRank() {
@@ -122,6 +122,7 @@ int studentOperation::ShowRank() {
 	case 1: return 1;
 	case 2: return 3;
 	case 3: return 4;
+	default: return -1;
 	}
 }
 int studentOperation::EditStudent() {
@@ -181,6 +182,7 @@ int studentOperation::EditStudent() {
 	case 2: return 2;
 	case 3: return 3;
 	case 4: return 4;
+	default: return -1;
 	}
 }
 
@@ -364,7 +366,6 @@ int teacherOperation::EditGrade() {
 	else return 0;
 }
 int teacherOperation::CourseDetail() {
-	int state;
 	system("cls");
 	cout<<"---------------\n"
 		<<setw(_courseNameLength+1)<<"课程"
@@ -429,7 +430,7 @@ int teacherOperation::EditTeacher() {
 	if(!inputInt(state,2)) return 1;
 	switch(state) {
 	case 1: return 2;
-	case 2: return -1;
+	default: return -1;
 	}
 }
 
@@ -488,7 +489,8 @@ bool adminOperation::Menu() {
 			break;
 				}
 		case 4: {
-			state=EditGrade(); 
+			state=EditGrade();
+			break;
 				}
 		case 5: {
 			state=EditAdmin();
@@ -583,7 +585,7 @@ int adminOperation::FindTeacher(bool flag) {
 	cout<<"请输入查找的姓名:";
 	if(!inputString(name,_peopleNameLength)) return -1;
 	cout<<"---------------\n";
-	num = T::find(&teacher(name));
+	num = T::find(&teacher(name),1);
 	if(num == 1 && !flag) {
 		cout<<"---------------\n";
 		return 0;//flag为0时,找到一个即退出
@@ -616,9 +618,10 @@ int adminOperation::FindTeacher(bool flag) {
 			if(!inputInt(state,3)) return -1;
 			switch(state) {
 			case 1: {
-				cout<<"请选择序号:";
-				if(!inputInt(state,num)) return -1;
-				num=T::find(&teacher(name),state);//唯一无返回值的路径
+				cout<<"---------------\n"
+					<<"请选择序号:";
+				if(!inputInt(state,num) || !state) return -1;
+				num=T::find(&teacher(name),flag,state);//唯一无返回值的路径
 				if(!flag && num == 1) {
 					cout<<"---------------\n";
 					return 0;//flag为0时,找到一个即退出
@@ -887,7 +890,7 @@ int adminOperation::FindStudent(bool flag) {
 	cout<<"请输入查找的姓名:";
 	if(!inputString(name,_peopleNameLength)) return -1;
 	cout<<"---------------\n";
-	num = S::find(&student(name));
+	num = S::find(&student(name),1);
 	if(num == 1 && !flag) {
 		cout<<"---------------\n";
 		return 0;//flag为0时,找到一个即退出
@@ -920,9 +923,10 @@ int adminOperation::FindStudent(bool flag) {
 			if(!inputInt(state,3)) return -1;
 			switch(state) {
 			case 1: {
-				cout<<"请选择序号:";
-				if(!inputInt(state,num)) return -1;
-				num=S::find(&student(name),state);//唯一无返回值的路径
+				cout<<"---------------\n"
+					<<"请选择序号:";
+				if(!inputInt(state,num) || !state) return -1;
+				num=S::find(&student(name),flag,state);//唯一无返回值的路径
 				if(!flag && num == 1) {
 					cout<<"---------------\n";
 					return 0;//flag为0时,找到一个即退出
@@ -1204,7 +1208,7 @@ int adminOperation::FindCourse(bool flag) {
 		cout<<"目前的查找信息:\n";
 		courseBuff.print();
 		cout<<"---------------\n"
-			<<"添加查找信息:\n"
+			<<"添加或修改查找信息:\n"
 			<<"1. 课程名\n"
 			<<"2. 教师\n"
 			<<"3. 学分\n"
@@ -1246,9 +1250,9 @@ int adminOperation::FindCourse(bool flag) {
 	}
 
 	num=C::find(&courseBuff,1);//查找课程,返回找到的个数
-
 	if(num == 1 && !flag) {
 		cout<<"---------------\n";
+		courseBuff.clear();
 		return 0;//flag为0时,找到一个即退出
 	}
 
@@ -1286,9 +1290,13 @@ int adminOperation::FindCourse(bool flag) {
 			case 1: {
 				cout<<"---------------\n"
 					<<"请选择序号:";
-				if(!inputInt(state,num)) return -1;
+				if(!inputInt(state,num) || !state) {
+					courseBuff.clear();
+					return -1;
+				}
 				num=C::find(&courseBuff,flag,state);//唯一无返回值的路径
 				if(!flag && num == 1) {
+					courseBuff.clear();
 					cout<<"---------------\n";
 					return 0;//flag为0时,找到一个即退出
 				}
@@ -1509,18 +1517,372 @@ int adminOperation::DeleteCourse() {
 	return -1;
 }
 
-int adminOperation::EditGrade() {return 0;}
+int adminOperation::EditGrade() {
+	int state;
+	system("cls");
+	cout<<"---------------\n"
+		<<"成绩信息\n"
+		<<"---------------\n"
+		<<"1. 查看成绩信息\n"
+		<<"2. 添加成绩\n"
+		<<"3. 修改成绩\n"
+		<<"4. 删除成绩\n"
+		<<"5. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(!inputInt(state,5)) return 4;
+	while(1){
+		switch(state) {
+		case -1: return 4;
+		case 1: {
+			state = GradeInfo();
+			break;
+				}
+		case 2: {
+			state = AddGrade();
+			break;
+				}
+		case 3: {
+			state = SetGrade();
+			break;
+				}
+		case 4: {
+			state = DeleteGrade();
+			break;
+				}
+		default: return -1;
+		}
+	}
+	return 4;
+}
+int adminOperation::GradeInfo() {
+	system("cls");
+	int state;
+	cout<<"---------------\n"
+		<<"成绩信息\n"
+		<<"---------------\n";
+	G::showAllt();
+	cout<<"---------------\n"
+		<<"1. 查找成绩\n"
+		<<"2. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(inputInt(state,2) && state == 1) {
+		while(1) {
+			state = FindGrade();
+			switch(state) {
+			case 1: break;
+			case 3: return 3;
+			case 4: return 4;
+			default: return 1;
+			}
+		}
+	}
+	else return -1;
+}
 int adminOperation::FindGrade(bool flag) {
-	return 0;
+	int state;
+	int num;
+	G::refreshNum();
+	if(flag) {
+		system("cls");
+		cout<<"---------------\n"
+			<<"查找成绩\n"
+			<<"---------------\n";
+	}
+	cout<<"1. 按课程查找\n"
+		<<"2. 按学生查找\n"
+		<<"3. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(!inputInt(state,3)) return -1;
+	cout<<"---------------\n";
+	switch(state) {
+	case 1: {//按课程查找
+		while(1) {
+			state = FindCourse(0);
+			if(state == -1) return -1;
+			else if(state == 0) break;
+			cout<<"---------------\n"
+				<<"按课程查找成绩\n"
+				<<"---------------\n";
+		}
+		cout<<setw(_courseNameLength+1)<<"课程"
+			<<setw(_peopleNameLength+1)<<"教师"<<endl;
+		C::printTitle(0,0);
+		cout<<"\n---------------\n";
+		num = getStudentNum();
+		if(!num) {
+			cout<<"该课程无学生参加!\n";
+			system("pause");
+			C::clearCurrent();
+			return -1;
+		}
+		G::showRowList(C::getRank());
+		cout<<"---------------\n"
+			<<"1. 选择学生序号\n"
+			<<"2. 返回上一级\n"
+			<<"---------------\n"
+			<<"请输入序号:";
+		if(!inputInt(state,2)) {
+			C::clearCurrent();
+			return -1;
+		}
+		switch(state) {
+		case 1: {
+			cout<<"---------------\n"
+				<<"请选择序号:";
+			if(!inputInt(state,num) || state == 0) {
+				C::clearCurrent();
+				return -1;
+			}
+			G::moveInRow(state);
+			break;
+				}
+		default: {
+			C::clearCurrent();
+			return -1;
+				}
+		}
+		break;
+			}
+	case 2: {//按学生查找
+		while(1) {
+			state = FindStudent(0);
+			if(state == -1) return -1;
+			else if(state == 0) break;
+			cout<<"---------------\n"
+				<<"按学生查找成绩\n"
+				<<"---------------\n";
+		}
+		cout<<"---------------\n"
+			<<"姓名:    ";
+		S::printTitle();
+		cout<<"\n---------------\n";
+		num = getCourseNum();
+		if(!num) {
+			cout<<"该学生未参加任何课程!\n";
+			system("pause");
+			S::clearCurrent();
+			return -1;
+		}
+		G::showColList(S::getRank());
+		cout<<"---------------\n"
+			<<"1. 选择课程序号\n"
+			<<"2. 返回上一级\n"
+			<<"---------------\n"
+			<<"请输入序号:";
+		if(!inputInt(state,2)) {
+			S::clearCurrent();
+			return -1;
+		}
+		switch(state) {
+		case 1: {
+			cout<<"---------------\n"
+				<<"请选择序号:";
+			if(!inputInt(state,num) || state == 0) {
+				S::clearCurrent();
+				return -1;
+			}
+			G::moveInCol(state);//确定了成绩条目
+			break;
+				}
+		default: {
+			S::clearCurrent();
+			return -1;
+				}
+		}
+		break;
+			}
+	default: return -1;
+	}
+	cout<<"---------------\n"
+		<<setw(_courseNameLength+1)<<"课程"
+		<<setw(_peopleNameLength+1)<<"教师"
+		<<setw(_peopleNameLength+1)<<"学生"
+		<<"成绩"<<endl;
+	G::showNode();
+	cout<<"\n---------------\n"
+		<<"1. 修改成绩\n"
+		<<"2. 删除成绩\n"
+		<<"3. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号\n";
+	if(!inputInt(state,3)) {
+		S::clearCurrent();
+		G::clearCurrent();
+		return -1;
+	}
+	switch(state) {
+	case 1: return 3;
+	case 2: return 4;
+	default: {
+		S::clearCurrent();
+		G::clearCurrent();
+		return -1;
+			 }
+	}
 }
 int adminOperation::AddGrade() {
-	return 0;
+	char name[_courseNameLength],teacherName[_peopleNameLength],studentName[_peopleNameLength];
+	int state,grade=0;
+	system("cls");
+	cout<<"---------------\n"
+		<<"添加成绩\n"
+		<<"---------------\n";
+	while(1) {//用break来跳过部分代码
+		cout<<"教师:";
+		if(!inputString(teacherName,_peopleNameLength)) return -1;
+		if(!T::isExists(&teacher(teacherName),0)) {
+			cout<<"该教师不存在!请先添加教师\n";
+			break;
+		}
+		cout<<"课程名:";
+		if(!inputString(name,_courseNameLength)) return -1;
+		if(!C::isExists(&course(name,teacherName))) {
+			cout<<"该课程不存在!请先添加课程\n";
+			break;
+		}
+		cout<<"学生:";
+		if(!inputString(studentName,_peopleNameLength)) return -1;
+		if(!S::isExists(&student(studentName),0)) {
+			cout<<"该学生不存在!请先添加学生\n";
+			break;
+		}
+		else if(C::isExists(&course(name,teacherName),1) && 
+			S::isExists(&student(studentName)) &&
+			G::isExist(C::getRank(),S::getRank())) {
+				C::clearCurrent();
+				S::clearCurrent();
+				cout<<"该成绩条目已存在!";
+				break;
+		}
+		cout<<"成绩:";
+		if(!inputGrade(grade)) return -1;
+		OLNode *p;
+		p = new OLNode(C::getRank(),S::getRank(),grade);
+		C::clearCurrent();
+		S::clearCurrent();
+		cout<<"---------------\n"
+			<<setw(_courseNameLength+1)<<"课程"
+			<<setw(_peopleNameLength+1)<<"教师"
+			<<setw(_peopleNameLength+1)<<"学生"<<"成绩\n"
+			<<setw(_courseNameLength+1)<<name
+			<<setw(_peopleNameLength+1)<<teacherName
+			<<setw(_peopleNameLength+1)<<studentName<<grade
+			<<"\n---------------\n"
+			<<"确认添加?(Y/n):";
+		if(inputBool()) {
+			G::addNode(p);
+			cout<<"添加成功!\n";
+		}
+		break;
+	}
+	cout<<"---------------\n"
+		<<"1. 继续添加成绩\n"
+		<<"2. 返回上一级\n"
+		<<"---------------\n"
+		<<"请选择序号:";
+	if(!inputInt(state,2)) return -1;
+	switch(state) {
+	case 1: return 2;
+	default: return -1;
+	}
 }
 int adminOperation::SetGrade() {
-	return 0;
+	system("cls");
+	int state,grade;
+	cout<<"---------------\n"
+		<<"修改成绩信息\n"
+		<<"---------------\n";
+	if(!G::isCurrent()){
+		while(1) {
+			state = FindGrade(0);			
+			if(state == -1) return -1;//若查找函数返回上一级,则返回上一级
+			else if(state == 0) break;//找到一个成绩,退出循环
+			system("cls");
+			cout<<"---------------\n"
+				<<"修改成绩信息\n"
+				<<"---------------\n";
+		}
+	}
+	cout.setf(ios_base::left);
+	cout<<"待修改的条目:\n"
+		<<setw(_courseNameLength+1)<<"课程"
+		<<setw(_peopleNameLength+1)<<"教师"
+		<<setw(_peopleNameLength+1)<<"学生"
+		<<"成绩"<<endl;
+	G::showNode();
+	cout<<"\n---------------\n"
+		<<"请输入新的成绩:";
+	if(!inputGrade(grade)) {
+		G::clearCurrent();
+		C::clearCurrent();
+		S::clearCurrent();
+		return -1;
+	}
+	G::setNode(grade);
+	G::clearCurrent();
+	C::clearCurrent();
+	S::clearCurrent();
+	cout<<"修改已成功!\n";
+	cout<<"---------------\n"
+		<<"1. 继续修改成绩信息\n"
+		<<"2. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(!inputInt(state,2)) return -1;
+	switch(state) {
+	case 1: return 3;
+	default: return -1;
+	}
+	return -1;
 }
 int adminOperation::DeleteGrade() {
-	return 0;
+	system("cls");
+	int state;
+	cout<<"---------------\n"
+		<<"删除成绩信息\n"
+		<<"---------------\n";
+	if(!G::isCurrent()){
+		while(1) {
+			state = FindGrade(0);			
+			if(state == -1) return -1;//若查找函数返回上一级,则返回上一级
+			else if(state == 0) break;//找到一个成绩,退出循环
+			system("cls");
+			cout<<"---------------\n"
+				<<"删除成绩信息\n"
+				<<"---------------\n";
+		}
+	}
+	cout.setf(ios_base::left);
+	cout<<"待删除的条目:\n"
+		<<setw(_courseNameLength+1)<<"课程"
+		<<setw(_peopleNameLength+1)<<"教师"
+		<<setw(_peopleNameLength+1)<<"学生"
+		<<"成绩"<<endl;
+	G::showNode();
+
+	cout<<"\n---------------\n"
+		<<"确认删除成绩?(Y/n):";
+	if(inputBool()) {
+		G::deleteNode();
+		cout<<"删除已成功!\n";
+	}
+	G::clearCurrent();
+	C::clearCurrent();
+	S::clearCurrent();
+	cout<<"---------------\n"
+		<<"1. 继续删除成绩信息\n"
+		<<"2. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(!inputInt(state,2)) return -1;
+	switch(state) {
+	case 1: return 4;
+	default: return -1;
+	}
+	return -1;
 }
 
 int adminOperation::EditAdmin() {
@@ -1573,7 +1935,7 @@ int adminOperation::EditAdmin() {
 	if(!inputInt(state,2)) return 1;
 	switch(state) {
 	case 1: return 5;
-	case 2: return -1;
+	default: return -1;
 	}
 }
 
@@ -1581,22 +1943,21 @@ int adminOperation::EditAdmin() {
 
 void System::Init() {
 	Lists_import();
-	cout<<"Import complete."<<endl;
 
-	while(1) {//测试接口
-		cout<<"测试菜单:\n1.测试or2.正常启动?\n"
-			<<"请选择序号:";
-		int state;
-		while(!inputInt(state,2));
-		if(state == 1) 
-			TestMain();
-		else break;
-	}
+	//测试接口
+	//while(1) {
+	//	cout<<"测试菜单:\n1.测试or2.正常启动?\n"
+	//		<<"请选择序号:";
+	//	int state;
+	//	while(!inputInt(state,2));
+	//	if(state == 1) 
+	//		TestMain();
+	//	else break;
+	//}
 
 	while(MainMenu());//1为继续,0为退出
 
 	Lists_export();
-	cout<<"Export complete."<<endl;
 }
 bool System::MainMenu() {
 	system("cls");
@@ -1663,32 +2024,6 @@ void System::About() {
 }
 
 //-----------------------------Test-----------------------------------
-void quickSort(int **P,int length) {
-	if(length<=1) return;
-	int refer;//参考值
-	int temp=0,head=1, tail=length-1;
-	int *buff;
-	refer=*P[temp];
-	while(head<tail) {
-		while(*P[head]>=refer && head<length-1) head++;//找更小值
-		while(*P[tail]<=refer && tail>0) tail--;//找更大值
-		if(head<tail) {
-			buff=P[head];
-			P[head]=P[tail];
-			P[tail]=buff;
-		}
-		else break;
-	}
-	if(!tail) quickSort(&(P[1]),length-1);
-	else {
-		buff=P[tail];
-		P[tail]=P[temp];
-		P[temp]=buff;
-		temp=tail;
-		quickSort(P,temp);
-		if(length-temp-1>1) quickSort(&(P[temp+1]),length-temp-1);
-	}
-}
 
 void System::TestMain() {
 	showColList(1);

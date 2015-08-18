@@ -76,8 +76,9 @@ public:
 	student(student & student);
 	~student() {};
 private:
-	double GPA;     //gpa,由成绩表中计算得出,初始化为-1
+	double GPA;       //gpa,由成绩表中计算得出,初始化为-1
 	int totalCredit;  //已给分课程的总学分,由成绩表中计算得出,初始化为0
+	int courseNum;    //初始化为0,由成绩表统计得出
 	student * next;
 };
 class course {
@@ -153,7 +154,7 @@ public:
 	~teacherList();
 	bool isExists(teacher *aim, int flag=1);//若flag,修改current
 	bool isCorrect(teacher *aim); //返回姓名密码是否正确
-	int find(teacher *aim,int rank=0);//返回找到的个数,如果找到一个,current不为空
+	int find(teacher *aim,bool print=0,int rank=0);//返回找到的个数,如果找到一个,current不为空
 	void Import();
 	void Export();
 	void setTeacher(char *name="NULL", char *password="NULL");
@@ -178,9 +179,11 @@ public:
 	void Export();
 	bool isExists(student *aim, int flag=1);
 	bool isCorrect(student *aim); //返回姓名密码是否正确
-	int find(student *aim,int rank=0);//返回找到的个数,如果找到一个,current不为空
+	int find(student *aim,bool print=0,int rank=0);//返回找到的个数,如果找到一个,current不为空
 	int getRank();//返回current所指节点的序号,头结点记为1,若current为空返回0;
 	int getLength();
+	void setCourseNum(int n,int rank = 0);
+	int getCourseNum();
 	void setStudent(char *name="NULL", char *password="NULL");
 	bool addStudent(student *add);
 	bool deleteStudent();
@@ -202,14 +205,14 @@ public:
 	courseList();
 	courseList(courseList & L);
 	~courseList();
-	bool isExists(course *aim);
+	bool isExists(course *aim,int flag=0);
 	int find(course *aim, bool print=0, int rank=0);//包含模糊查找,返回找到的个数,如果找到一个,current不为空
 	bool findForDelete(char *teacher);//只匹配教师姓名,找到第一个相同条目返回1,且current指向该条目
 	int getRank();//返回current所指节点的序号,头结点记为1,若current为空返回0;
 	int getLength();
 	void setCourse(char *name="NULL", char *teacher="NULL", int credit=0);//0为不可能的值,用于判断是否赋值
 	int getCredit(int rank=0);
-	void setStudentNum(int n);
+	void setStudentNum(int n,int rank = 0);
 	int getStudentNum();
 	void getName(char *buff);
 	void getTeacher(char *buff);
@@ -226,7 +229,7 @@ private:
 	int length;
 	course *head,*tail, *current;
 };
-class gradeList: public listBase, public studentList, public courseList {
+class gradeList: public studentList, public courseList {
 public:
 	gradeList(int r=1,int c=1);
 	gradeList(gradeList &C);
@@ -253,8 +256,9 @@ public:
 	void showCol(int c);
 	void showColList(int c);
 	void moveInCol(int rank);//将current移动到列链表的第rank个
-	void refreshRank();
-	void refreshStudent();
+	void refreshRank();//刷新单科排名
+	void refreshNum();//刷新学生的课程数和课程的学生数
+	void refreshStudent();//刷新学生的GPA和总学分
 	int maxInRow();
 	int minInRow();
 	double meanInRow();
@@ -320,6 +324,7 @@ private:
 	int DeleteCourse();
 	int EditGrade();
 	int FindGrade(bool flag = 1);
+	int GradeInfo();
 	int AddGrade();
 	int SetGrade();
 	int DeleteGrade();
