@@ -8,6 +8,6 @@ void showTime();
 bool inputInt(int &state,int max);
 bool inputBool();
 bool inputString(char *s,int max);
-bool inputGrade(int &grade);
+bool inputGrade(int &grade,int max = 100);
 
 #endif HEAD_

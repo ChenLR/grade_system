@@ -43,7 +43,7 @@ bool studentOperation::Menu() {
 		<<"3. 修改个人信息\n"
 		<<"4. 注销\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state, 4)) return 1;
 	while(1) {
 		switch(state) {
@@ -90,7 +90,7 @@ int studentOperation::ShowGrade() {
 		<<"2. 修改个人信息\n"
 		<<"3. 注销\n"
 	    <<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,3)) return 1;
 	switch(state) {
 	case 0: return _exit;
@@ -115,7 +115,7 @@ int studentOperation::ShowRank() {
 		<<"2. 修改个人信息\n"
 		<<"3. 注销\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,3)) return 1;
 	switch(state) {
 	case 0: return _exit;
@@ -137,7 +137,7 @@ int studentOperation::EditStudent() {
 		<<"2. 修改密码\n"
 		<<"3. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,3)) return 1;
 	switch(state) {
 	case 0: return -1;
@@ -173,7 +173,7 @@ int studentOperation::EditStudent() {
 		<<"3. 继续修改个人信息\n"
 		<<"4. 注销\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,4)) return 1;
 	switch(state) {
 	case 0: return _exit;
@@ -183,7 +183,6 @@ int studentOperation::EditStudent() {
 	case 4: return 4;
 	}
 }
-
 
 bool teacherOperation::Login() {
 	T::clearCurrent();
@@ -217,7 +216,7 @@ bool teacherOperation::Menu() {
 		<<"2. 修改个人信息\n"
 		<<"3. 注销\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state, 4)) return 1;
 	while(1) {
 		switch(state) {
@@ -276,6 +275,7 @@ int teacherOperation::ShowCourses() {
 			<<"---------------\n"
 			<<"该用户无任何课程!\n";
 		system("pause");
+		return -1;
 	}
 }
 int teacherOperation::CourseMenu() {
@@ -297,7 +297,7 @@ int teacherOperation::CourseMenu() {
 		<<"2. 查看统计信息\n"
 		<<"3. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,3)) return 1;
 	switch(state) {
 	case 1: {
@@ -351,7 +351,7 @@ int teacherOperation::EditGrade() {
 				<<"1. 继续修改成绩\n"
 				<<"2. 返回上一级\n"
 				<<"---------------\n"
-				<<"请输入功能序号:";
+				<<"请输入序号:";
 			if(!inputInt(state,2)) return 0;
 			switch(state) {
 			case 1: return 1;
@@ -392,7 +392,7 @@ int teacherOperation::EditTeacher() {
 		<<"2. 修改密码\n"
 		<<"3. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,3)) return 1;
 	switch(state) {
 	case 0: return _exit;
@@ -425,14 +425,13 @@ int teacherOperation::EditTeacher() {
 		<<"1. 继续修改个人信息\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,2)) return 1;
 	switch(state) {
 	case 1: return 2;
 	case 2: return -1;
 	}
 }
-
 
 bool adminOperation::Login() {
 	A::clearCurrent();
@@ -471,7 +470,7 @@ bool adminOperation::Menu() {
 		<<"5. 修改个人信息\n"
 		<<"6. 注销\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state, 6)) return 1;
 	while(1) {
 		switch(state) {
@@ -521,7 +520,7 @@ int adminOperation::EditTeacher() {
 		<<"4. 删除教师\n"
 		<<"5. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,5)) return 1;
 	while(1){
 		switch(state) {
@@ -558,7 +557,7 @@ int adminOperation::TeacherInfo() {
 		<<"1. 查找教师\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(inputInt(state,2) && state == 1) {
 		while(1) {
 			state = FindTeacher();
@@ -596,7 +595,7 @@ int adminOperation::FindTeacher(bool flag) {
 				<<"2. 删除教师\n"
 				<<"3. 返回上一级\n"
 				<<"---------------\n"
-				<<"请输入功能序号:";
+				<<"请输入序号:";
 			if(!inputInt(state,3)) return -1;
 			switch(state) {
 			case 1: return 3;
@@ -613,7 +612,7 @@ int adminOperation::FindTeacher(bool flag) {
 				<<"2. 重新查找\n"
 				<<"3. 返回上一级\n"
 				<<"---------------\n"
-				<<"请输入功能序号:";
+				<<"请输入序号:";
 			if(!inputInt(state,3)) return -1;
 			switch(state) {
 			case 1: {
@@ -635,7 +634,7 @@ int adminOperation::FindTeacher(bool flag) {
 				<<"1. 重新查找\n"
 				<<"2. 返回上一级\n"
 				<<"---------------\n"
-				<<"请输入功能序号:";
+				<<"请输入序号:";
 			if(!inputInt(state,2)) return -1;
 			switch(state) {
 			case 1: return 1;
@@ -673,7 +672,7 @@ int adminOperation::AddTeacher() {
 		<<"1. 继续添加教师\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,2)) return -1;
 	switch(state) {
 	case 1: return 2;
@@ -692,6 +691,10 @@ int adminOperation::SetTeacher() {
 			state = FindTeacher(0);			
 			if(state == -1) return -1;//若查找函数返回上一级,则返回上一级
 			else if(state == 0) break;//找到一个教师,退出循环
+			system("cls");
+			cout<<"---------------\n"
+				<<"修改教师信息\n"
+				<<"---------------\n";
 		}
 	}
 
@@ -705,7 +708,7 @@ int adminOperation::SetTeacher() {
 		<<"2. 修改密码\n"
 		<<"3. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,3)) return -1;
 	switch(state) {
 	case 1: {
@@ -741,7 +744,7 @@ int adminOperation::SetTeacher() {
 		<<"1. 继续修改教师信息\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,2)) {
 		T::clearCurrent();
 		return -1;
@@ -767,6 +770,10 @@ int adminOperation::DeleteTeacher() {
 			state = FindTeacher(0);			
 			if(state == -1) return -1;//若查找函数返回上一级,则返回上一级
 			else if(state == 0) break;//找到一个教师,退出循环
+			system("cls");
+			cout<<"---------------\n"
+				<<"删除教师\n"
+				<<"---------------\n";
 		}
 	}
 	cout.setf(ios_base::left);
@@ -775,8 +782,11 @@ int adminOperation::DeleteTeacher() {
 		<<setw(_passwordLength+1)<<"密码"<<endl;
 	T::showCurrent();
 	cout<<"\n---------------\n"
-		<<"确认删除?(Y/n):";
+		<<"该教师执教的课程,及其成绩信息将一并删除\n确认删除教师?(Y/n):";
 	if(inputBool()){
+		char name[_peopleNameLength];
+		T::getName(name);
+		G::deleteCourses(name);//删除教师对应的课程及成绩信息
 		if(T::deleteTeacher())
 			cout<<"删除成功!\n";
 		else 
@@ -786,7 +796,7 @@ int adminOperation::DeleteTeacher() {
 		<<"1. 继续删除教师\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,2)) {
 		T::clearCurrent();
 		return -1;
@@ -814,11 +824,11 @@ int adminOperation::EditStudent(){
 		<<"4. 删除学生\n"
 		<<"5. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,5)) return 2;
 	while(1){
 		switch(state) {
-		case -1: return 1;
+		case -1: return 2;
 		case 1: {
 			state = StudentInfo();
 			break;
@@ -851,7 +861,7 @@ int adminOperation::StudentInfo() {
 		<<"1. 查找学生\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(inputInt(state,2) && state == 1) {
 		while(1) {
 			state = FindStudent();
@@ -889,7 +899,7 @@ int adminOperation::FindStudent(bool flag) {
 				<<"2. 删除学生\n"
 				<<"3. 返回上一级\n"
 				<<"---------------\n"
-				<<"请输入功能序号:";
+				<<"请输入序号:";
 			if(!inputInt(state,3)) return -1;
 			switch(state) {
 			case 1: return 3;
@@ -906,7 +916,7 @@ int adminOperation::FindStudent(bool flag) {
 				<<"2. 重新查找\n"
 				<<"3. 返回上一级\n"
 				<<"---------------\n"
-				<<"请输入功能序号:";
+				<<"请输入序号:";
 			if(!inputInt(state,3)) return -1;
 			switch(state) {
 			case 1: {
@@ -928,7 +938,7 @@ int adminOperation::FindStudent(bool flag) {
 				<<"1. 重新查找\n"
 				<<"2. 返回上一级\n"
 				<<"---------------\n"
-				<<"请输入功能序号:";
+				<<"请输入序号:";
 			if(!inputInt(state,2)) return -1;
 			switch(state) {
 			case 1: return 1;
@@ -966,7 +976,7 @@ int adminOperation::AddStudent() {
 		<<"1. 继续添加学生\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,2)) return -1;
 	switch(state) {
 	case 1: return 2;
@@ -985,6 +995,10 @@ int adminOperation::SetStudent() {
 			state = FindStudent(0);			
 			if(state == -1) return -1;//若查找函数返回上一级,则返回上一级
 			else if(state == 0) break;//找到一个学生,退出循环
+			system("cls");
+			cout<<"---------------\n"
+				<<"修改学生信息\n"
+				<<"---------------\n";
 		}
 	}
 
@@ -998,7 +1012,7 @@ int adminOperation::SetStudent() {
 		<<"2. 修改密码\n"
 		<<"3. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,3)) return -1;
 	switch(state) {
 	case 1: {
@@ -1034,7 +1048,7 @@ int adminOperation::SetStudent() {
 		<<"1. 继续修改学生信息\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,2)) {
 		S::clearCurrent();
 		return -1;
@@ -1060,6 +1074,10 @@ int adminOperation::DeleteStudent() {
 			state = FindStudent(0);			
 			if(state == -1) return -1;//若查找函数返回上一级,则返回上一级
 			else if(state == 0) break;//找到一个学生,退出循环
+			system("cls");
+			cout<<"---------------\n"
+				<<"删除学生\n"
+				<<"---------------\n";
 		}
 	}
 	cout.setf(ios_base::left);
@@ -1068,9 +1086,10 @@ int adminOperation::DeleteStudent() {
 		<<setw(_passwordLength+1)<<"密码"<<endl;
 	S::showCurrent();
 	cout<<"\n---------------\n"
-		<<"确认删除?(Y/n):";
+		<<"该学生对应的成绩信息将一并删除\n确认删除学生?(Y/n):";
 	if(inputBool()){
-		if(S::deleteStudent())
+		G::deleteCol(S::getRank());//删除成绩信息
+		if(S::deleteStudent())//删除学生信息
 			cout<<"删除成功!\n";
 		else 
 			cout<<"删除失败!\n";
@@ -1079,7 +1098,7 @@ int adminOperation::DeleteStudent() {
 		<<"1. 继续删除学生\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,2)) {
 		S::clearCurrent();
 		return -1;
@@ -1096,22 +1115,398 @@ int adminOperation::DeleteStudent() {
 }
 
 int adminOperation::EditCourse(){
-	return 0;
+	system("cls");
+	int state;
+	cout<<"---------------\n"
+		<<"课程信息\n"
+		<<"---------------\n"
+		<<"1. 查看课程信息\n"
+		<<"2. 添加课程\n"
+		<<"3. 修改课程信息\n"
+		<<"4. 删除课程\n"
+		<<"5. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(!inputInt(state,5)) return 3;
+	while(1){
+		switch(state) {
+		case -1: return 3;
+		case 1: {
+			state = CourseInfo();
+			break;
+				}
+		case 2: {
+			state = AddCourse();
+			break;
+				}
+		case 3: {
+			state = SetCourse();
+			break;
+				}
+		case 4: {
+			state = DeleteCourse();
+			break;
+				}
+		default: return -1;
+		}
+	}
+	return 3;
 }
 int adminOperation::CourseInfo() {
-	return 0;
+	system("cls");
+	int state;
+	cout<<"---------------\n"
+		<<"课程信息\n"
+		<<"---------------\n";
+	C::showAll();
+	cout<<"---------------\n"
+		<<"1. 查找课程\n"
+		<<"2. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(inputInt(state,2) && state == 1) {
+		while(1) {
+			state = FindCourse();
+			switch(state) {
+			case 1: break;
+			case 3: return 3;
+			case 4: return 4;
+			default: return 1;
+			}
+		}
+	}
+	else return -1;
 }
 int adminOperation::FindCourse(bool flag) {
-	return 0;
+	char name[_courseNameLength],teacher[_peopleNameLength];
+	int credit;
+	int state,num = 0;
+	bool isEmpty = courseBuff.isEmpty();
+
+	if(flag) {
+		system("cls");
+		cout<<"---------------\n"
+			<<"查找课程\n"
+			<<"---------------\n";
+	}
+
+	if(isEmpty) {
+		cout<<"添加查找信息:\n"
+			<<"1. 课程名\n"
+			<<"2. 教师\n"
+			<<"3. 学分\n"
+			<<"4. 返回上一级\n"
+			<<"---------------\n"
+			<<"请输入序号:";
+		if(!inputInt(state,4)) return 1;
+	}
+	else {
+		cout<<"目前的查找信息:\n";
+		courseBuff.print();
+		cout<<"---------------\n"
+			<<"添加查找信息:\n"
+			<<"1. 课程名\n"
+			<<"2. 教师\n"
+			<<"3. 学分\n"
+			<<"4. 清空查找信息\n"
+			<<"5. 返回上一级\n"
+			<<"---------------\n"
+			<<"请输入序号:";
+		if(!inputInt(state,5)) return 1;
+	}
+
+	if(isEmpty && state == 4 || !isEmpty && state == 5 || state == 0) {//返回上一级
+		courseBuff.clear();
+		return -1;
+	}
+
+	if(state==1) {
+		cout<<"---------------\n"
+			<<"查找的课程名:";
+		if(inputString(name,_courseNameLength))
+			courseBuff.set(name);
+		else return 1;
+	}
+	else if(state==2) {
+		cout<<"---------------\n"
+			<<"查找的教师:";
+		if(inputString(teacher,_peopleNameLength))
+			courseBuff.set("NULL",teacher);
+		else return 1;
+	}
+	else if(state==3) {
+		cout<<"---------------\n请输入查找的学分:";
+		if(inputGrade(credit,_maxCredit))
+			courseBuff.set("NULL","NULL",credit);
+		else return 1;
+	}
+	else {
+		courseBuff.clear();
+		return 1;
+	}
+
+	num=C::find(&courseBuff,1);//查找课程,返回找到的个数
+
+	if(num == 1 && !flag) {
+		cout<<"---------------\n";
+		return 0;//flag为0时,找到一个即退出
+	}
+
+	while(1){
+		if(num == 1) {
+			cout<<"---------------\n"
+				<<"1. 修改课程信息\n"
+				<<"2. 删除课程\n"
+				<<"3. 返回上一级\n"
+				<<"---------------\n"
+				<<"请输入序号:";
+			courseBuff.clear();
+			if(!inputInt(state,3)) return -1;
+			switch(state) {
+			case 1: return 3;
+			case 2: return 4;
+			default: {
+				C::clearCurrent();
+				return -1;
+					 }
+			}
+		}
+		if(num > 1) {
+			cout<<"---------------\n"
+				<<"1. 选择上述课程的序号\n"
+				<<"2. 添加或修改查找信息\n"
+				<<"3. 返回上一级\n"
+				<<"---------------\n"
+				<<"请输入序号:";
+			if(!inputInt(state,3)) {
+				courseBuff.clear();
+				return -1;
+			}
+			switch(state) {
+			case 1: {
+				cout<<"---------------\n"
+					<<"请选择序号:";
+				if(!inputInt(state,num)) return -1;
+				num=C::find(&courseBuff,flag,state);//唯一无返回值的路径
+				if(!flag && num == 1) {
+					cout<<"---------------\n";
+					return 0;//flag为0时,找到一个即退出
+				}
+				break;
+					}
+			case 2: return 1;
+			default: {
+				courseBuff.clear();
+				return -1;
+					 }
+			}
+		}
+		else {
+			cout<<"---------------\n"
+				<<"1. 添加或修改查找信息\n"
+				<<"2. 返回上一级\n"
+				<<"---------------\n"
+				<<"请输入序号:";
+			if(!inputInt(state,2)) {
+				courseBuff.clear();
+				return -1;
+			}
+			switch(state) {
+			case 1: return 1;
+			default: {
+				courseBuff.clear();
+				return -1;
+					 }
+			}
+		}
+	}
 }
 int adminOperation::AddCourse() {
-	return 0;
+	system("cls");
+	int state;
+	char name[_courseNameLength],teacher[_peopleNameLength];
+	int credit;
+	cout<<"---------------\n"
+		<<"添加课程\n"
+		<<"---------------\n"
+		<<"课程名:";
+	if(!inputString(name,_courseNameLength)) return -1;
+	cout<<"教师:";
+	if(!inputString(teacher,_peopleNameLength)) return -1;
+	if(C::isExists(&course(name,teacher))) {
+		cout<<"该课程已存在!\n";
+	}
+	else if(!T::isExists(&class teacher(teacher),0)) {
+		cout<<"该教师不存在,请先添加教师!\n";
+	}
+	else {
+		cout<<"学分:";
+		if(!inputGrade(credit,_maxCredit)) return -1;
+		if(credit < 0) credit = 0;
+		cout<<"确认添加课程?(Y/n):";
+		if(inputBool()) {
+			course *p;
+			p = new course(name,teacher,credit);
+			if(C::addCourse(p))
+				cout<<"添加成功!\n";
+			else cout<<"添加失败:\n";
+		}
+	}
+	cout<<"---------------\n"
+		<<"1. 继续添加课程\n"
+		<<"2. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(!inputInt(state,2)) return -1;
+	switch(state) {
+	case 1: return 2;
+	default: return -1;
+	}
+	return -1;
 }
 int adminOperation::SetCourse() {
-	return 0;
+	system("cls");
+	char name[_courseNameLength],teacher[_peopleNameLength];
+	int credit;
+	int state;
+	cout<<"---------------\n"
+		<<"修改课程信息\n"
+		<<"---------------\n";
+	if(!C::isCurrent()){
+		while(1) {
+			state = FindCourse(0);			
+			if(state == -1) return -1;//若查找函数返回上一级,则返回上一级
+			else if(state == 0) break;//找到一门课程,退出循环
+			system("cls");
+			cout<<"---------------\n"
+				<<"修改课程信息\n"
+				<<"---------------\n";
+		}
+	}
+
+	cout.setf(ios_base::left);
+	cout<<"待修改的条目:\n";
+	C::showCurrent();
+	cout<<"\n---------------\n"
+		<<"1. 修改课程名\n"
+		<<"2. 修改教师\n"
+		<<"3. 修改学分\n"
+		<<"4. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(!inputInt(state,4)) return -1;
+	switch(state) {
+	case 1: {
+		cout<<"---------------\n"
+			<<"请输入新的课程名:";
+		if(!inputString(name,_courseNameLength)) return -1;
+		C::getTeacher(teacher);
+		if(C::isExists(&course(name,teacher))) {
+			cout<<"该课程已存在!"<<endl;
+			_sleep(_delay);
+			return 3;
+		}
+		setCourse(name);
+		cout<<"修改已成功!\n";
+		break;
+			}
+	case 2: {
+		cout<<"---------------\n"
+			<<"请输入新的教师名:";
+		if(!inputString(teacher,_peopleNameLength)) return -1;
+		if(!T::isExists(&class teacher(teacher),0)) {
+			cout<<"该教师不存在!请先添加教师\n";
+		}
+		C::getName(name);
+		if(C::isExists(&course(name,teacher))) {
+			cout<<"该课程已存在!"<<endl;
+			_sleep(_delay);
+			return 3;
+		}
+		setCourse("NULL",teacher);
+		cout<<"修改已成功!\n";
+		break;
+			}
+	case 3: {
+		cout<<"---------------\n"
+			<<"请输入新的学分:";
+		if(!inputGrade(credit,_maxCredit)) return -1;
+		if(credit < 0) credit = 0;
+		setCourse("NULL","NULL",credit);
+		cout<<"修改已成功!\n";
+		break;
+			}
+	default: {
+		C::clearCurrent();
+		return -1;
+			 }
+	}
+	cout<<"---------------\n"
+		<<"1. 继续修改课程信息\n"
+		<<"2. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(!inputInt(state,2)) {
+		C::clearCurrent();
+		return -1;
+	}
+	switch(state) {
+	case 1: return 3;
+	default: {
+		C::clearCurrent();
+		return -1;
+			 }
+	}
+	C::clearCurrent();
+	return -1;
 }
 int adminOperation::DeleteCourse() {
-	return 0;
+	system("cls");
+	int state;
+	cout<<"---------------\n"
+		<<"删除课程\n"
+		<<"---------------\n";
+	if(!C::isCurrent()){
+		while(1) {
+			state = FindCourse(0);			
+			if(state == -1) return -1;//若查找函数返回上一级,则返回上一级
+			else if(state == 0) break;//找到一个课程,退出循环
+			system("cls");
+			cout<<"---------------\n"
+				<<"删除课程\n"
+				<<"---------------\n";
+		}
+	}
+	cout.setf(ios_base::left);
+	cout<<"待删除的条目:\n";
+	C::showCurrent();
+	cout<<"\n---------------\n"
+		<<"该课程对应的成绩信息将一并删除\n确认删除课程?(Y/n):";
+	if(inputBool()){
+		G::deleteRow(C::getRank());//删除成绩信息
+		if(C::deleteCourse())//删除课程信息
+			cout<<"删除成功!\n";
+		else 
+			cout<<"删除失败!\n";
+	}
+	cout<<"---------------\n"
+		<<"1. 继续删除课程\n"
+		<<"2. 返回上一级\n"
+		<<"---------------\n"
+		<<"请输入序号:";
+	if(!inputInt(state,2)) {
+		C::clearCurrent();
+		return -1;
+	}
+	switch(state) {
+	case 1: return 4;
+	default: {
+		C::clearCurrent();
+		return -1;
+			 }
+	}
+	C::clearCurrent();
+	return -1;
 }
 
 int adminOperation::EditGrade() {return 0;}
@@ -1141,7 +1536,7 @@ int adminOperation::EditAdmin() {
 		<<"2. 修改密码\n"
 		<<"3. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,3)) return 1;
 	switch(state) {
 	case 0: return _exit;
@@ -1174,7 +1569,7 @@ int adminOperation::EditAdmin() {
 		<<"1. 继续修改个人信息\n"
 		<<"2. 返回上一级\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,2)) return 1;
 	switch(state) {
 	case 1: return 5;
@@ -1217,7 +1612,7 @@ bool System::MainMenu() {
 		<<"4. 关于\n"
 		<<"5. 退出\n"
 		<<"---------------\n"
-		<<"请输入功能序号:";
+		<<"请输入序号:";
 	if(!inputInt(state,5)) return 1;
 	switch(state) {
 	case 0: return _exit;

@@ -95,10 +95,10 @@ bool inputString(char *s,int max) {
 	if(!strcmp(s,"quit")) return 0;
 	return 1;
 }
-bool inputGrade(int &grade) {
+bool inputGrade(int &grade,int max) {
 	int k=0;
 	char s[12];
-	while(k++,fgets(s,12,stdin), s[strlen(s)-1]!='\n' || strcmp(s,"quit\n") && (atoi(s)>100 || atoi(s) < -1)) {
+	while(k++,fgets(s,12,stdin), s[strlen(s)-1]!='\n' || strcmp(s,"quit\n") && (atoi(s) > max || atoi(s) < -1)) {
 		fflush(stdin);	
 		if(k>2) {
 			cout<<"错误次数过多!\n";

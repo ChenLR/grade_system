@@ -4,6 +4,7 @@
 #define _peopleNameLength 11
 #define _courseNameLength 25
 #define _passwordLength 20
+#define _maxCredit 15
 #include <iostream>
 using namespace std;
 
@@ -202,18 +203,23 @@ public:
 	courseList(courseList & L);
 	~courseList();
 	bool isExists(course *aim);
-	int find(course *aim, bool print=0, int rank=0);//返回找到的个数,如果找到一个,current不为空
+	int find(course *aim, bool print=0, int rank=0);//包含模糊查找,返回找到的个数,如果找到一个,current不为空
+	bool findForDelete(char *teacher);//只匹配教师姓名,找到第一个相同条目返回1,且current指向该条目
 	int getRank();//返回current所指节点的序号,头结点记为1,若current为空返回0;
 	int getLength();
+	void setCourse(char *name="NULL", char *teacher="NULL", int credit=0);//0为不可能的值,用于判断是否赋值
 	int getCredit(int rank=0);
 	void setStudentNum(int n);
 	int getStudentNum();
+	void getName(char *buff);
+	void getTeacher(char *buff);
 	void Import();
 	void Export();
 	bool addCourse(course *add);
 	bool deleteCourse();
 	void showAll();
 	void printTitle(int rank=0,int flag=1);
+	void showCurrent();
 	void clearCurrent();
 	bool isCurrent();
 private:
@@ -238,6 +244,7 @@ public:
 	bool addCol();
 	bool deleteRow(int m);
 	bool deleteCol(int n);
+	void deleteCourses(char *name);//删除教师名字对应的全部课程信息
 	void showAll();
 	void showAllt();
 	void showRow(int r);
@@ -317,6 +324,7 @@ private:
 	int SetGrade();
 	int DeleteGrade();
 	int EditAdmin();
+	course courseBuff;//用于记录搜索信息,初始化为默认值
 };
 
 class System: public adminOperation, public teacherOperation, public studentOperation{

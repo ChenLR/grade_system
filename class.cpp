@@ -643,6 +643,7 @@ void course::print() {//只打印非初值的量
 	cout.setf(ios_base::left);
 	if(strcmp(name,"NULL")) cout<<setw(8)<<"课程:"<<name<<endl;
 	if(strcmp(teacher,"NULL")) cout<<setw(8)<<"教师:"<<teacher<<endl;
+	if(credit != 0) cout<<setw(8)<<"学分:"<<credit<<endl;
 }
 bool course::isEmpty() {
 	return !strcmp(name,"NULL") && !strcmp(teacher,"NULL");
@@ -703,16 +704,23 @@ int courseList::find(course *aim, bool print, int rank) {//返回找到的个数,如果找
 	cout.setf(ios_base::left);
 	while(p) {
 		if((!strcmp(p->name,aim->name) || !strcmp(aim->name,"NULL")) &&
-			(!strcmp(p->teacher,aim->teacher) || !strcmp(aim->teacher,"NULL"))) 
+			(!strcmp(p->teacher,aim->teacher) || !strcmp(aim->teacher,"NULL")) &&
+			(p->credit == aim->credit || !aim->credit)) 
 		{
-			if(!count && !rank && print) cout<<"---------------\n课程信息:\n"
-				<<"---------------\n    "<<setw(_courseNameLength+1)
-				<<"课程名"<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
+			if(!count && !rank && print)
+				cout<<"---------------\n"
+				<<"课程信息:\n"
+				<<"---------------\n    "
+				<<setw(_courseNameLength+1)<<"课程名"
+				<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
 			count++;
 			current=p;
 			if(!rank && print) cout<<setw(2)<<count<<". "<<*p<<endl;
 			if(count==rank) {
-				if(print) cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
+				if(print)
+					cout<<"---------------\n"
+					<<setw(_courseNameLength+1)<<"课程名"
+					<<setw(_peopleNameLength+1)<<"教师"<<"学分\n"<<*p<<endl;
 				return 1;
 			}
 		}
@@ -727,16 +735,23 @@ int courseList::find(course *aim, bool print, int rank) {//返回找到的个数,如果找
 		p=head;
 		while(p) {
 			if((strstr(p->name,aim->name) || !strcmp(aim->name,"NULL")) &&
-			(strstr(p->teacher,aim->teacher) || !strcmp(aim->teacher,"NULL")))
+			(strstr(p->teacher,aim->teacher) || !strcmp(aim->teacher,"NULL")) &&
+			(p->credit == aim->credit || !aim->credit))
 			{
-				if(!count && !rank && print) cout<<"---------------\n可能的课程信息:\n"
-					<<"---------------\n    "<<setw(_courseNameLength+1)
-				<<"课程名"<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
+				if(!count && !rank && print)
+					cout<<"---------------\n"
+					<<"课程信息:\n"
+					<<"---------------\n    "
+					<<setw(_courseNameLength+1)<<"课程名"
+					<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
 				count++;
 				current=p;
 				if(!rank && print) cout<<setw(2)<<count<<". "<<*p<<endl;
-				if(count==rank && print) {
-					cout<<"---------------\n"<<setw(2)<<1<<". "<<*p<<endl;
+				if(count==rank) {
+					if(print)
+						cout<<"---------------\n"
+						<<setw(_courseNameLength+1)<<"课程名"
+						<<setw(_peopleNameLength+1)<<"教师"<<"学分\n"<<*p<<endl;
 					return 1;
 				}
 			}
@@ -755,6 +770,18 @@ int courseList::find(course *aim, bool print, int rank) {//返回找到的个数,如果找
 		}
 	}
 }
+bool courseList::findForDelete(char *teacher) {
+	course *p;
+	p = head;
+	while(p) {
+		if(!strcmp(p->teacher,teacher)) {
+			current = p;
+			return 1;
+		}
+		p = p->next;
+	}
+	return 0;
+}
 int courseList::getRank() {
 	course *p;
 	if(current==NULL) return 0;
@@ -770,6 +797,9 @@ int courseList::getRank() {
 }
 int courseList::getLength() {
 	return length;
+}
+void courseList::setCourse(char *name, char *teacher, int credit) {
+	if(current) current->set(name,teacher,credit);
 }
 int courseList::getCredit(int rank) {
 	if(rank) {
@@ -787,6 +817,12 @@ void courseList::setStudentNum(int n) {
 int courseList::getStudentNum() {
 	if(current) return current->studentNum;
 	else return 0;
+}
+void courseList::getName(char *buff){
+	if(current) strcpy(buff,current->name);
+}
+void courseList::getTeacher(char *buff){
+	if(current) strcpy(buff,current->teacher);
 }
 void courseList::Import() {
 	ifstream inf("Data\\courseInfo_in.txt");
@@ -854,8 +890,8 @@ bool courseList::deleteCourse() {
 void courseList::showAll() {
 	course *p;
 	cout.setf(ios_base::left);
-	cout<<"---------------\n"<<setw(_courseNameLength+1)
-				<<"课程名"<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
+	cout<<setw(_courseNameLength+1)<<"课程名"
+		<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
 	p=head;
 	while(p) {
 		cout<<*p<<endl;
@@ -876,6 +912,13 @@ void courseList::printTitle(int rank,int flag) {
 		cout.setf(ios_base::left);
 		cout<<setw(_courseNameLength+1)<<current->name<<setw(_peopleNameLength+1)<<current->teacher;
 		if(flag) cout<<setw(5)<<current->credit;
+	}
+}
+void courseList::showCurrent() {
+	if(current) {
+		cout<<setw(_courseNameLength+1)<<"课程名"
+			<<setw(_peopleNameLength+1)<<"教师"<<"学分"<<endl;
+		cout<<*current;
 	}
 }
 void courseList::clearCurrent() {
@@ -1176,6 +1219,12 @@ bool gradeList::deleteCol(int n) {
 	delete []colHead;
 	colHead=q;
 	return 1;	
+}
+void gradeList::deleteCourses(char *name) {
+	while(C::findForDelete(name)) {//查找该姓名的第一个课程条目
+		deleteRow(C::getRank());//删除成绩信息
+		C::deleteCourse();//删除课程信息
+	}
 }
 void gradeList::showAll() {
 	cout.setf(ios_base::left);
