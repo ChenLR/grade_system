@@ -79,21 +79,35 @@ bool inputBool() {
 	else return 1;
 }
 bool inputString(char *s,int max) {
-	int k=0;
-	while(k++,fgets(s,max,stdin), s[strlen(s)-1]!='\n') {
-		fflush(stdin);
-		if(k>2) {
-			cout<<"错误次数过多!\n";
-			_sleep(_delay);
-			return 0;
-		}
-		cout<<"输入字符串过长!\n请重新输入:";
-
-	}
-	fflush(stdin);
-	s[strlen(s)-1]='\0';//清掉读入的回车
-	if(!strcmp(s,"quit")) return 0;
-	return 1;
+    int k=0,flag;
+    while(1){
+        flag = 0;
+        k++;
+        fgets(s,max,stdin);
+        fflush(stdin);
+        if(s[strlen(s)-1]!='\n') {
+            flag++;
+            if(k>2) {
+                cout<<"错误次数过多!\n";
+                _sleep(_delay);
+                return 0;
+            }
+            cout<<"输入字符串过长!\n请重新输入:";
+        }
+        else if(strstr(s," ")) {
+            flag++;
+            if(k>2) {
+                cout<<"错误次数过多!\n";
+                return 0;
+            }
+            cout<<"不能含有空格!\n请重新输入:";
+        }
+        if(!flag) break;
+    }
+    fflush(stdin);
+    s[strlen(s)-1]='\0';//清掉读入的回车
+    if(!strcmp(s,"quit")) return 0;
+    return 1;
 }
 bool inputGrade(int &grade,int max) {
 	int k=0;

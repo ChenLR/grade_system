@@ -1,10 +1,10 @@
 #ifndef CLASS_H_
 #define CLASS_H_
 
-#define _peopleNameLength 11
-#define _courseNameLength 25
-#define _passwordLength 20
-#define _maxCredit 15
+#define _peopleNameLength 11 //人名的最大长度
+#define _courseNameLength 25 //课程名的最大长度
+#define _passwordLength 20   //密码的最大长度
+#define _maxCredit 15        //学分的最大值
 #include <iostream>
 using namespace std;
 
